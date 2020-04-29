@@ -45,8 +45,8 @@ bus input data format:
     type of bus, V, δ, Pg, Qg, Pl ,Ql ,Qg_max, Qg_min
     type of bus is an integer 1-3
     1: slack (there can be only one slack bus)
-    2: PQ / Load bus
-    3: PV / Gen bus
+    2: PV / Gen bus
+    3: PQ / Load bus
 line input data format:
     from bus, to bus, R, X,G,B, Max MVA
 Assumptions:
@@ -134,12 +134,12 @@ void load_flow::init_S()
     {
         switch ((int)busData[i][0])
         {
-        case 2:
+        case 2: // PV Bus
+            this->S[i + 1].real(this->busData[i][3] - this->busData[i][5]);
+            break;
+        case 3: // PQ Bus
             this->S[i + 1].real(this->busData[i][3] - this->busData[i][5]);
             this->S[i + 1].imag(this->busData[i][4] - this->busData[i][6]);
-            break;
-        case 3:
-            this->S[i + 1].real(this->busData[i][3] - this->busData[i][5]);
             break;
         default:
             break;
@@ -165,12 +165,12 @@ void load_flow::init_V()
     {
         switch ((int)this->busData[i][0])
         {
-        case 2:
-            this->V[i + 1].push_back(complex<double>(1, 0));
+        case 2: // PV BUS
+            this->V[i + 1].push_back(complex<double>(this->busData[i][1], 0));
             break;
 
-        case 3:
-            this->V[i + 1].push_back(complex<double>(this->busData[i][1], 0));
+        case 3: // PQ BUS
+            this->V[i + 1].push_back(complex<double>(1, 0));
             break;
         default:
             break;
@@ -290,11 +290,7 @@ void load_flow::solveLoadFlow()
         {
             switch ((int)this->busData[j - 1][0])
             {
-            case 2: // pq // Load
-                this->V[j].push_back(this->guass_seidel(i, j, 0));
-                this->V[j][i] = this->guass_seidel(i, j, 1);
-                break;
-            case 3: // pv // Gen
+            case 2: // pv // Load
                 type_change = true;
                 Q = this->reactive_power(i - 1, j);
                 Qg = Q + this->busData[j - 1][6]; //  Qg = Q + Ql
@@ -317,6 +313,10 @@ void load_flow::solveLoadFlow()
                     this->V[j][i] = this->guass_seidel(i, j, 1);
                 break;
 
+            case 3: // pq // Gen
+                this->V[j].push_back(this->guass_seidel(i, j, 0));
+                this->V[j][i] = this->guass_seidel(i, j, 1);
+                break;
             default:
                 break;
             }

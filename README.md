@@ -3,8 +3,8 @@ Solving the load flow problem using Guass-Seidel iterative method. Written in C+
 
 ## 3 Types of Buses
 1. **Slack bus** or also known as swing bus.
-2. **PQ bus** or Load bus.
-3. **PV bus** or Gen bus.
+2. **PV bus** or Gen bus.
+3. **PQ bus** or Load bus.
 
 ## Bus Input Data
 Format for bus input data. Same is followed in the busInputData.csv file.
@@ -14,10 +14,10 @@ Format for bus input data. Same is followed in the busInputData.csv file.
 | Type of Bus | V       | δ degrees | Gen MW | Gen Mvar  | Load MW | Load Mvar  | Gen Mvar Max | Gen Mvar Min |
 | ----------- | ------------- | --------- | -------- | -------- | ------- | ------- | ------ | -------- | 
 | 1 | 1 | 0 | - |-| 0|0|-|-|
-|  2 |- |-|0|0|8|2.8|-|-|
-| 3|1.05  |-|5.2|-|0.8|0.4|4.0|-2.8|
-| 2  | - |-|0|0|0|0| -|-|
-| 2  | - |-|0|0|0|0| -|-|
+|  3 |- |-|0|0|8|2.8|-|-|
+| 2|1.05  |-|5.2|-|0.8|0.4|4.0|-2.8|
+| 3  | - |-|0|0|0|0| -|-|
+| 3  | - |-|0|0|0|0| -|-|
 
 ## Line Input Data
 - All the data is in pu (per unit).
